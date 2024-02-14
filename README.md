@@ -26,6 +26,10 @@ This is a simple yet powerful blog website built using Vite and React for the fr
 - **Authentication:**
   - User authentication powered by Appwrite.
   - Secure access to create, update, and delete posts.
+ 
+## Snap 🖼️
+
+![](Chai&Blog.png)
 
 ## Contributions 🤝
 
