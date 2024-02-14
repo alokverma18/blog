@@ -2,8 +2,8 @@ import React from 'react'
 
 function Logo({width = '100px'}) {
   return (
-    <div>
-      Blog
+    <div className='text-3xl'>
+      Chai&Blog
     </div>
   )
 }
