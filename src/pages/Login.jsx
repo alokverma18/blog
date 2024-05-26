@@ -3,7 +3,7 @@ import { Login as LoginComponent } from '../components'
 
 function Login() {
   return (
-    <div className='py-8'>
+    <div className='py-8 min-h-[700px]'>
         <LoginComponent />
     </div>
   )
