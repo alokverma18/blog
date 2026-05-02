@@ -1,8 +1,8 @@
-# Blog Website ✍️
+# Blog Website 📚
 
 ## Description 📝
 
-This is a simple yet powerful blog website built using Vite and React for the frontend, Appwrite as a backend-as-a-service, Tailwind for styling, and deployed on Vercel. The application allows users to create, read, update, and delete blog posts with images. (A Project from Chai☕ and React)
+Welcome to the learning resources for the Blog Website project! This is a simple yet powerful blog website built using Vite and React for the frontend, Appwrite as a backend-as-a-service, Tailwind for styling, and deployed on Vercel. The application allows users to create, read, update, and delete blog posts with images. A Project from [Chai☕ and React.](https://youtube.com/playlist?list=PLu71SKxNbfoDqgPchmvIsL4hTnJIrtige&feature=shared)
 
 ## Tech Stack ⚙️
 
@@ -19,17 +19,35 @@ This is a simple yet powerful blog website built using Vite and React for the fr
 
 ## Features ✨
 
+Explore the features of the Blog Website:
+
 - **CRUD Operations:**
-  - Create, Read, Update, and Delete blog posts.
-  - Upload and display images associated with each post.
+  - Learn how to perform Create, Read, Update, and Delete operations on blog posts.
+  - Understand how to upload and display images associated with each post.
 
 - **Authentication:**
-  - User authentication powered by Appwrite.
-  - Secure access to create, update, and delete posts.
- 
-## Snap 🖼️
+  - Dive into the user authentication powered by Appwrite.
+  - Learn about secure access to create, update, and delete posts.
 
-![](Chai&Blog.png)
+## Getting Started 🚀
+
+To get started with the Blog Website project, follow these steps:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/blog-website.git
+
+2. Install dependencies:
+
+   ```bash
+   cd blog-website
+   npm install
+
+3. Run the project:
+   
+   ```bash
+   npm run dev
 
 ## Contributions 🤝
 
