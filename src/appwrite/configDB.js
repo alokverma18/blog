@@ -110,17 +110,17 @@ export class Service{
     }
 
     // no try-catch in tutorial
-    getFilePreview(fileId){
+    getFileView(fileId){
         try {
-            return this.bucket.getFilePreview(
+            if (!fileId) return undefined;
+            const result = this.bucket.getFileView(
                 config.appwriteBucketId,
-                fileId,
-                270, 
-                270
-            )
+                fileId
+            );
+            return result.href;
         } catch (error) {
-            console.log("getFilePreview Error", error);
-            return false
+            console.log("getFileView Error", error);
+            return undefined
         }
     }
 
