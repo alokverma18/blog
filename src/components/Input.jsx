@@ -5,12 +5,14 @@ const Input = React.forwardRef(function Input(
     label,
     type = "text",
     className = "",
-    onChangeHandler = () => {},
+    onChange,
+    onChangeHandler,
     ...props
   },
   ref
 ) {
   const id = useId();
+  const handleChange = onChange || onChangeHandler || (() => {});
   return (
     <div className="w-full">
       {label && (
@@ -24,7 +26,7 @@ const Input = React.forwardRef(function Input(
         ref={ref}
         {...props}
         id={id}
-        onChange={onChangeHandler}
+        onChange={handleChange}
       />
     </div>
   );
