@@ -11,7 +11,17 @@ const authSlice = createSlice({
     reducers: {
         login: (state, action) => {
             state.status = true;
-            state.userData = action.payload.userData;
+            // Handle both direct userData and wrapped payload
+            const userData = action.payload.userData || action.payload;
+            state.userData = {
+                $id: userData.$id,
+                name: userData.name,
+                email: userData.email,
+                $createdAt: userData.$createdAt,
+                $updatedAt: userData.$updatedAt,
+                status: userData.status,
+                emailVerification: userData.emailVerification
+            };
         },
         logout: (state) => {
             state.status = false;
