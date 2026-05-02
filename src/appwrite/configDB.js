@@ -14,13 +14,13 @@ export class Service{
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId}){
+    async createPost({title, content, featuredImage, status, userId, userName}){
         try {
             return await this.databases.createDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
-                slug,
-                {title, content, featuredImage, status, userId}
+                ID.unique(),
+                {title, content, featuredImage, status, userId, userName}
             )
         } catch (error) {
             console.log("createPost Error", error);
@@ -117,9 +117,28 @@ export class Service{
                 config.appwriteBucketId,
                 fileId
             );
-            return result.href;
+            // Debug: log the result
+            console.log('getFileView result:', result);
+            console.log('getFileView result.toString():', result.toString());
+            // Return the full URL string
+            return result.toString();
         } catch (error) {
             console.log("getFileView Error", error);
+            return undefined
+        }
+    }
+
+    getFilePreview(fileId){
+        try {
+            if (!fileId) return undefined;
+            // Try getFileView first as it's more reliable for public access
+            const result = this.bucket.getFileView(
+                config.appwriteBucketId,
+                fileId
+            );
+            return result.toString();
+        } catch (error) {
+            console.log("getFilePreview Error", error);
             return undefined
         }
     }
