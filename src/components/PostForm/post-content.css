@@ -1,0 +1,103 @@
+/* Post content styling for full-width images */
+.browser-css img {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 1.5rem 0;
+    border-radius: 0.5rem;
+}
+
+/* Dark mode support for post content */
+.dark .browser-css img {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Additional typography improvements */
+.browser-css {
+    line-height: 1.7;
+    color: inherit;
+}
+
+/* Dark mode text color fixes */
+.dark .browser-css {
+    color: #e5e7eb;
+}
+
+.dark .browser-css h1,
+.dark .browser-css h2,
+.dark .browser-css h3,
+.dark .browser-css h4,
+.dark .browser-css h5,
+.dark .browser-css h6 {
+    color: #f9fafb;
+}
+
+.dark .browser-css p {
+    color: #e5e7eb;
+}
+
+.dark .browser-css li {
+    color: #e5e7eb;
+}
+
+.browser-css h1,
+.browser-css h2,
+.browser-css h3,
+.browser-css h4,
+.browser-css h5,
+.browser-css h6 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.browser-css p {
+    margin-bottom: 1.25rem;
+}
+
+.browser-css blockquote {
+    border-left: 4px solid #3b82f6;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #6b7280;
+}
+
+.dark .browser-css blockquote {
+    border-left-color: #60a5fa;
+    color: #d1d5db;
+}
+
+.browser-css code {
+    background-color: #f3f4f6;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.dark .browser-css code {
+    background-color: #374151;
+    color: #f9fafb;
+}
+
+.browser-css pre {
+    background-color: #f3f4f6;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.dark .browser-css pre {
+    background-color: #1f2937;
+}
+
+.browser-css ul,
+.browser-css ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+}
+
+.browser-css li {
+    margin-bottom: 0.5rem;
+}

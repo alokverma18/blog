@@ -1,5 +1,4 @@
 import Header from './Header/Header';
-import Footer from './Footer/Footer';
 import Logo from './Logo'
 import LogoutBtn from './Header/LogoutBtn'
 import Button from './Button'
@@ -13,4 +12,4 @@ import RTE from './RTE'
 import Select from './Select'
 import PostCard from './PostCard'
 
-export { Header, Footer, Logo, LogoutBtn, Container, Button, Input, Signup, Login, PostForm, AuthLayout, RTE, Select, PostCard };
+export { Header, Logo, LogoutBtn, Container, Button, Input, Signup, Login, PostForm, AuthLayout, RTE, Select, PostCard };

@@ -6,12 +6,12 @@ import {useNavigate, useParams } from 'react-router-dom'
 
 function EditPost() {
     const [post, setPost] = useState(null)
-    const {slug} = useParams()
+    const {id} = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {  
-        if (slug){
-            appwriteService.getPost(slug).then((post) => {
+        if (id){
+            appwriteService.getPost(id).then((post) => {
                 if(post){
                     setPost(post)
                 }
@@ -19,7 +19,7 @@ function EditPost() {
         } else {
             navigate('/')
         }
-        }, [slug, navigate]) 
+        }, [id, navigate]) 
   return post ? (
     <div className='py-8 min-h-[700px]'>
         <Container>

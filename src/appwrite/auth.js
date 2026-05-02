@@ -30,7 +30,7 @@ export class AuthService {
 
     async login({email, password}) {
         try {
-            return await this.account.createEmailSession(email, password);
+            return await this.account.createEmailPasswordSession(email, password);
         } catch (error) {
             throw error;
         }
@@ -54,6 +54,16 @@ export class AuthService {
             console.log("Appwrite serive :: logout :: error", error);
         }
     }
+
+    async updateName(name) {
+        try {
+            return await this.account.updateName(name);
+        } catch (error) {
+            console.log("Appwrite service :: updateName :: error", error);
+            throw error;
+        }
+    }
+
 }
 
 const authService = new AuthService();
