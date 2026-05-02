@@ -1,5 +1,5 @@
 import conf from '../config/config.js';
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, OAuthProvider } from "appwrite";
 
 
 export class AuthService {
@@ -57,12 +57,12 @@ export class AuthService {
 
     async loginWithGoogle(){
         try {
-            return await this.account.createOAuth2Session(
-                'google',
-                `${window.location.origin}/`,
-                `${window.location.origin}/login`,
-                ['profile', 'email']
-            );
+            return await this.account.createOAuth2Session({
+                provider: OAuthProvider.Google,
+                success: `${window.location.origin}/`,
+                failure: `${window.location.origin}/login`,
+                scopes: ['profile', 'email']
+            });
         } catch (error) {
             console.log("Google OAuth error", error);
             throw error;
