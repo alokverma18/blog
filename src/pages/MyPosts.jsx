@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Container, PostCard, Button } from '../components'
 import appwriteService from '../appwrite/configDB'
+import { Query } from 'appwrite'
 import { useTheme } from '../context/ThemeContext.jsx'
 
 function MyPosts() {
@@ -15,11 +16,9 @@ function MyPosts() {
   useEffect(() => {
     if (userData) {
       setLoading(true)
-      appwriteService.getPosts().then((posts) => {
+      appwriteService.getPosts([Query.equal("userId", userData.$id)]).then((posts) => {
         if (posts) {
-          // Filter posts by current user
-          const userPosts = posts.documents.filter(post => post.userId === userData.$id)
-          setPosts(userPosts)
+          setPosts(posts.documents)
         }
         setLoading(false)
       }).catch(() => {

@@ -39,10 +39,10 @@ function Profile() {
     setMessage('')
 
     try {
-      // Note: Appwrite doesn't allow direct name updates through the client SDK
-      // This would typically require server-side functions or different approach
-      // For now, we'll just show a message
-      setMessage('Profile update functionality requires server-side implementation')
+      const updatedUser = await authService.updateName(formData.name)
+      dispatch(login(updatedUser))
+      setEditMode(false)
+      setMessage('Profile updated successfully')
     } catch (error) {
       setMessage('Error updating profile: ' + error.message)
     } finally {
