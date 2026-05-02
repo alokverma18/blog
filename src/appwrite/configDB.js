@@ -109,19 +109,13 @@ export class Service{
         }
     }
 
-    // no try-catch in tutorial
     getFileView(fileId){
         try {
             if (!fileId) return undefined;
-            const result = this.bucket.getFileView(
+            return this.bucket.getFileView(
                 config.appwriteBucketId,
                 fileId
-            );
-            // Debug: log the result
-            console.log('getFileView result:', result);
-            console.log('getFileView result.toString():', result.toString());
-            // Return the full URL string
-            return result.toString();
+            ).toString();
         } catch (error) {
             console.log("getFileView Error", error);
             return undefined
