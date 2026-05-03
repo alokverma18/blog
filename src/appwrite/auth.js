@@ -87,7 +87,16 @@ export class AuthService {
                     return userData;
                     
                 } catch (sessionError) {
-                    // Session creation failed
+                    // Session creation failed - this is expected in production
+                    // Try to get current user directly (might work if session already exists)
+                    try {
+                        const currentUser = await this.account.get();
+                        if (currentUser) {
+                            return currentUser;
+                        }
+                    } catch (getUserError) {
+                        // If all fails, return null
+                    }
                 }
             }
             

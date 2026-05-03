@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Container, Logo, LogoutBtn} from '../index'
+import {Container, LogoutBtn} from '../index'
 import ProfileDropdown from '../ProfileDropdown/ProfileDropdown'
 import { Link } from 'react-router-dom'
 import {useSelector} from 'react-redux'
@@ -29,16 +29,6 @@ function Header() {
       slug: "/add-post",
       active: authStatus,
     },
-    {
-      name: "Login",
-      slug: "/login",
-      active: !authStatus,
-    },
-    {
-      name: "Sign Up",
-      slug: "/signup",
-      active: !authStatus,
-    },
   ]
 
   return (
@@ -48,7 +38,11 @@ function Header() {
           {/* Logo */}
           <div className='flex items-center'>
             <Link to='/' className='flex items-center space-x-2'>
-              <Logo width='40px' />
+              <img 
+                src="/favicon.svg" 
+                alt="Blog Express Logo" 
+                className="w-10 h-10"
+              />
               <span className='text-xl font-bold text-gray-900 dark:text-white'>Blog Express</span>
             </Link>
           </div>

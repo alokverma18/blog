@@ -14,6 +14,12 @@ function OAuthSuccess() {
     const handleOAuthCallback = async () => {
       if (isProcessing) return; // Prevent duplicate calls
       isProcessing = true;
+      
+      // Debug: Log current URL and parameters
+      console.log("Current URL:", window.location.href);
+      console.log("URL search:", window.location.search);
+      console.log("URL params:", new URLSearchParams(window.location.search));
+      
       try {
         const userData = await authService.handleOAuthSuccess();
         
@@ -31,9 +37,11 @@ function OAuthSuccess() {
           dispatch(login(cleanUserData));
           navigate('/');
         } else {
+          console.log("No user data returned from OAuth success handler");
           navigate('/login');
         }
       } catch (error) {
+        console.error("OAuth callback error:", error);
         navigate('/login');
       }
     };
