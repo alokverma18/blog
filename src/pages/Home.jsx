@@ -3,12 +3,40 @@ import appwriteService from "../appwrite/configDB";
 import {Container, PostCard} from '../components'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext.jsx'
+import { useSelector } from 'react-redux'
+import authService from '../appwrite/auth'
+import { useForm } from 'react-hook-form'
 
 function Home() {
     const [posts, setPosts] = useState([])
     const [loading, setLoading] = useState(true)
     const [searchTerm, setSearchTerm] = useState('')
+    const [showLogin, setShowLogin] = useState(true)
     const { isDark } = useTheme()
+    const authStatus = useSelector((state) => state.auth.status)
+    const { register, handleSubmit } = useForm()
+
+    const handleLogin = async (data) => {
+        try {
+            const session = await authService.login(data)
+            if (session) {
+                const userData = await authService.getCurrentUser()
+                if(userData) {
+                    window.location.reload() // Reload to update auth state
+                }
+            }
+        } catch (error) {
+            console.error('Login failed:', error)
+        }
+    }
+
+    const handleGoogleLogin = async () => {
+        try {
+            await authService.loginWithGoogle()
+        } catch (error) {
+            console.error('Google login failed:', error)
+        }
+    }
 
     useEffect(() => {
         setLoading(true)
@@ -102,79 +130,160 @@ function Home() {
     return (
         <div className='w-full py-8 min-h-screen'>
             <Container>
-                {/* Hero Section */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                        Discover Amazing Stories
-                    </h1>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                        Explore insights, tutorials, and experiences from our community of writers
-                    </p>
-                </div>
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Left Content - Hero and Posts */}
+                    <div className="flex-1">
+                        {/* Hero Section */}
+                        <div className="text-center mb-12">
+                            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                                Discover Amazing Stories
+                            </h1>
+                            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                                Explore insights, tutorials, and experiences from our community of writers
+                            </p>
+                        </div>
 
-                {/* Search Bar */}
-                <div className="max-w-2xl mx-auto mb-12">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Search posts..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full px-12 py-4 text-lg border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                        />
-                        <svg className='absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
-                        </svg>
-                        {searchTerm && (
-                            <button
-                                onClick={() => setSearchTerm('')}
-                                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                            >
-                                <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+                        {/* Search Bar */}
+                        <div className="max-w-2xl mx-auto mb-12">
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    placeholder="Search posts..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full px-12 py-4 text-lg border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                />
+                                <svg className='absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' />
                                 </svg>
-                            </button>
-                        )}
-                    </div>
-                </div>
+                                {searchTerm && (
+                                    <button
+                                        onClick={() => setSearchTerm('')}
+                                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                                    >
+                                        <svg className='w-5 h-5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M6 18L18 6M6 6l12 12' />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
 
-                {/* Results Count */}
-                {searchTerm && (
-                    <div className="mb-8">
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Found {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'} matching "{searchTerm}"
-                        </p>
-                    </div>
-                )}
-
-                {/* Posts Grid */}
-                {filteredPosts.length > 0 ? (
-                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-                        {filteredPosts.map((post) => (
-                            <PostCard key={post.$id} {...post} />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="text-center py-12">
-                        <svg className='w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
-                        </svg>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                            No posts found
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-400">
-                            Try adjusting your search terms or browse all posts
-                        </p>
+                        {/* Results Count */}
                         {searchTerm && (
-                            <button
-                                onClick={() => setSearchTerm('')}
-                                className="mt-4 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
-                            >
-                                Clear search
-                            </button>
+                            <div className="mb-8">
+                                <p className="text-gray-600 dark:text-gray-400">
+                                    Found {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'} matching "{searchTerm}"
+                                </p>
+                            </div>
+                        )}
+
+                        {/* Posts Grid */}
+                        {filteredPosts.length > 0 ? (
+                            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+                                {filteredPosts.map((post) => (
+                                    <PostCard key={post.$id} {...post} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-12">
+                                <svg className='w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' />
+                                </svg>
+                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                                    No posts found
+                                </h3>
+                                <p className="text-gray-600 dark:text-gray-400">
+                                    Try adjusting your search terms or browse all posts
+                                </p>
+                                {searchTerm && (
+                                    <button
+                                        onClick={() => setSearchTerm('')}
+                                        className="mt-4 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+                                    >
+                                        Clear search
+                                    </button>
+                                )}
+                            </div>
                         )}
                     </div>
-                )}
+
+                    {/* Right Sidebar - Authentication Forms */}
+                    {!authStatus && (
+                        <div className="lg:w-96">
+                            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+                                <div className="mb-6">
+                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                        {showLogin ? 'Sign In' : 'Sign Up'}
+                                    </h3>
+                                </div>
+
+                                {showLogin ? (
+                                    // Login Form
+                                    <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                                            <input
+                                                type="email"
+                                                placeholder="Enter your email"
+                                                {...register("email", {
+                                                    required: true,
+                                                    validate: {
+                                                        matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
+                                                            "Email address must be a valid address",
+                                                    }
+                                                })}
+                                                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Password</label>
+                                            <input
+                                                type="password"
+                                                placeholder="Enter your password"
+                                                {...register("password", {
+                                                    required: true,
+                                                })}
+                                                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                            />
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition-colors duration-200"
+                                        >
+                                            Sign In
+                                        </button>
+                                    </form>
+                                ) : (
+                                    // Signup Form
+                                    <div className="space-y-4">
+                                        <button
+                                            onClick={handleGoogleLogin}
+                                            className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                                        >
+                                            <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66L-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64L3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07L3.66 2.84C.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                            </svg>
+                                            Continue with Google
+                                        </button>
+                                    </div>
+                                )}
+
+                                <div className="mt-6 text-center">
+                                    <button
+                                        onClick={() => setShowLogin(!showLogin)}
+                                        className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
+                                    >
+                                        {showLogin ? 'Need an account? Sign Up' : 'Already have an account? Sign In'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </Container>
         </div>
     )
