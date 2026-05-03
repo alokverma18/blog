@@ -1,5 +1,5 @@
 import conf from '../config/config.js';
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, OAuthProvider } from "appwrite";
 
 
 export class AuthService {
@@ -55,15 +55,57 @@ export class AuthService {
         }
     }
 
-    async updateName(name) {
+    async loginWithGoogle(){
         try {
-            return await this.account.updateName(name);
+            // Use OAuth2 token approach instead of session
+            const token = await this.account.createOAuth2Token({
+                provider: OAuthProvider.Google,
+                success: `${window.location.origin}/oauth-success`,
+                failure: `${window.location.origin}/login`,
+                scopes: ['openid', 'profile', 'email']
+            });
+            return token;
         } catch (error) {
-            console.log("Appwrite service :: updateName :: error", error);
             throw error;
         }
     }
 
+    async handleOAuthSuccess() {
+        try {
+            // Extract OAuth credentials from URL parameters (as per Appwrite docs)
+            const urlParams = new URLSearchParams(window.location.search);
+            const secret = urlParams.get('secret');
+            const userId = urlParams.get('userId');
+            
+            if (secret && userId) {
+                // Create a proper session using OAuth credentials
+                try {
+                    const session = await this.account.createSession({ userId, secret });
+                    
+                    // Now get user data (this should work with proper session)
+                    const userData = await this.account.get();
+                    return userData;
+                    
+                } catch (sessionError) {
+                    // Session creation failed
+                }
+            }
+            
+            return null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async updateName(name) {
+        try {
+            await this.account.updateName(name);
+            // After updating name, get the updated user data
+            return await this.account.get();
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 const authService = new AuthService();

@@ -19,6 +19,7 @@ import Post from "./pages/Post";
 import AllPosts from "./pages/AllPosts";
 import Profile from "./pages/Profile";
 import MyPosts from "./pages/MyPosts";
+import OAuthSuccess from "./pages/OAuthSuccess";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
                     <MyPosts />
                 </AuthLayout>
             ),
+        },
+        {
+            path: "/oauth-success",
+            element: <OAuthSuccess />,
         },
     ],
 },
