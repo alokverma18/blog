@@ -39,7 +39,7 @@ function App() {
   return !loading ? (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       <Header />
-      <main className="min-h-screen">
+      <main>
         <Outlet />
       </main>
     </div>
