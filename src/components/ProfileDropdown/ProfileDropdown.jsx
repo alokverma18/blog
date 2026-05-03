@@ -26,9 +26,9 @@ function ProfileDropdown() {
     try {
       await authService.logout()
       dispatch(logout())
-      navigate('/')
+      navigate('/login')
     } catch (error) {
-      console.error('Logout failed:', error)
+      navigate('/login')
     }
   }
 

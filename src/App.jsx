@@ -13,15 +13,27 @@ function App() {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    authService.getCurrentUser()
-    .then((userData) => {
-      if (userData) {
-        dispatch(login(userData))
-      } else {
+    const checkAuthStatus = async (retries = 0) => {
+      try {
+        const userData = await authService.getCurrentUser()
+        if (userData) {
+          dispatch(login(userData))
+        } else {
+          dispatch(logout())
+        }
+      } catch (error) {
+        // Retry for any 401 error (OAuth sessions can take time to establish)
+        if (error.code === 401 && retries < 3) {
+          setTimeout(() => checkAuthStatus(retries + 1), 1500)
+          return
+        }
+        
         dispatch(logout())
       }
-    })
-    .finally(() => setLoading(false))
+      setLoading(false)
+    }
+
+    checkAuthStatus()
   }, [])
 
   return !loading ? (

@@ -57,15 +57,43 @@ export class AuthService {
 
     async loginWithGoogle(){
         try {
-            return await this.account.createOAuth2Session({
+            // Use OAuth2 token approach instead of session
+            const token = await this.account.createOAuth2Token({
                 provider: OAuthProvider.Google,
-                success: `${window.location.origin}/`,
+                success: `${window.location.origin}/oauth-success`,
                 failure: `${window.location.origin}/login`,
-                scopes: ['profile', 'email']
+                scopes: ['openid', 'profile', 'email']
             });
+            return token;
         } catch (error) {
-            console.log("Google OAuth error", error);
             throw error;
+        }
+    }
+
+    async handleOAuthSuccess() {
+        try {
+            // Extract OAuth credentials from URL parameters (as per Appwrite docs)
+            const urlParams = new URLSearchParams(window.location.search);
+            const secret = urlParams.get('secret');
+            const userId = urlParams.get('userId');
+            
+            if (secret && userId) {
+                // Create a proper session using OAuth credentials
+                try {
+                    const session = await this.account.createSession({ userId, secret });
+                    
+                    // Now get user data (this should work with proper session)
+                    const userData = await this.account.get();
+                    return userData;
+                    
+                } catch (sessionError) {
+                    // Session creation failed
+                }
+            }
+            
+            return null;
+        } catch (error) {
+            return null;
         }
     }
 
