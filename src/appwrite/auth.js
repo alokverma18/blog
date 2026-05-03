@@ -99,9 +99,10 @@ export class AuthService {
 
     async updateName(name) {
         try {
-            return await this.account.updateName(name);
+            await this.account.updateName(name);
+            // After updating name, get the updated user data
+            return await this.account.get();
         } catch (error) {
-            console.log("Appwrite service :: updateName :: error", error);
             throw error;
         }
     }
